@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-primary
+  namespace: highload-dns
+spec:
+  clusterIP: None
+  selector:
+    app: postgres
+    role: primary
+  ports:
+    - name: pg
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-primary
+  namespace: highload-dns
+spec:
+  serviceName: postgres-primary
+  selector:
+    matchLabels:
+      app: postgres
+      role: primary
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: primary
+    spec:
+      containers:
+        - name: pg
+          image: k3d-registry.localhost:5000/postgres-primary:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: appdb
+            - name: POSTGRES_USER
+              value: app
+            - name: POSTGRES_PASSWORD
+              value: app
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

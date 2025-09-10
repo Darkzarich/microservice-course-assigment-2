@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-replicas
+  namespace: highload-dns
+spec:
+  clusterIP: None
+  selector:
+    app: postgres
+    role: replica
+  ports:
+    - name: pg
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-replicas
+  namespace: highload-dns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: postgres
+      role: replica
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: replica
+    spec:
+      containers:
+        - name: pg
+          image: k3d-registry.localhost:5000/postgres-replica:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: PRIMARY_SERVICE
+              value: postgres-primary.highload-dns.svc.cluster.local
+            - name: REPL_USER
+              value: repl
+            - name: REPL_PASSWORD
+              value: repl
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          emptyDir: {}
