@@ -1,4 +1,4 @@
-# Assignment 2
+# Assignment #2
 
 "Microservices and High-Load" course 2nd homework assignment.
 
