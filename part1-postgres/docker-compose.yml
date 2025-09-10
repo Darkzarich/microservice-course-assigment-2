@@ -1,0 +1,51 @@
+
+version: '3.8'
+
+services:
+  postgres-slave1:
+    build: ./postgres/slave1
+    container_name: postgres-slave1
+    ports:
+      - "5433:5432"
+
+  postgres-slave2:
+    build: ./postgres/slave2
+    container_name: postgres-slave2
+    ports:
+      - "5434:5432"
+
+  haproxy:
+    build: ./haproxy
+    container_name: haproxy
+    ports:
+      - "5432:5432"
+    depends_on:
+      - postgres-slave1
+      - postgres-slave2
+
+  backend1:
+    build: ./backend
+    container_name: backend1
+    environment:
+      - DB_HOST=haproxy
+      - BACKEND_ID=backend1
+    depends_on:
+      - haproxy
+
+  backend2:
+    build: ./backend
+    container_name: backend2
+    environment:
+      - DB_HOST=haproxy
+      - BACKEND_ID=backend2
+    depends_on:
+      - haproxy
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend1
+      - backend2
