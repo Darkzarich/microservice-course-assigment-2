@@ -12,6 +12,9 @@ spec:
       targetPort: 8000
   type: ClusterIP
 ---
+# Using headless Service (clusterIP: None) Kubernetes DNS returns multiple IP addresses: the direct IPs of all Pods matched by the Service
+# The normal service above has type: ClusterIP, so the magic of Kubernetes (kube-proxy) then intercepts traffic to this IP and uses its own internal load-balancing rules
+# (typically iptables or IPVS) to forward the request to one of the healthy backend pods.
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,7 +54,7 @@ spec:
             - name: DB_HOST
               value: haproxy.highload-dns.svc.cluster.local
             - name: DB_PORT
-              value: "5432"
+              value: '5432'
             - name: DB_USER
               value: app
             - name: DB_PASSWORD

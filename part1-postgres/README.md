@@ -1,4 +1,4 @@
-# Homework: Application resiliency (Part А, extended example for Postgres)
+# Homework: Application resiliency (Part A, extended example for Postgres)
 
 ## Goal
 
