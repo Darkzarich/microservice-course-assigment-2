@@ -6,4 +6,5 @@ The goal is to play around with load-balancing and fail-safe setup. Witness the 
 
 The Python application itself and Docker files were provided as course materials.
 
-- [Part 1](part1-postgres/README.md)
+- [Part 1 (Docker Compose)](part1-postgres/README.md)
+- [Part 2 (Kubernetes)](part2-k3d-k8s/README.md)

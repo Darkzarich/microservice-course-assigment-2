@@ -1,4 +1,4 @@
-# Homework: Application resiliency (Part A, extended example for Postgres)
+# Homework: Application fault tolerance. Part A, the extended example for Postgres
 
 ## Goal
 
@@ -38,6 +38,7 @@ You can see that requests are balanced between the two instances of the applicat
 `postgres_ip` is switched between the two PostgreSQL instances, so is `backend_id`. Meaning, the application is working as expected.
 
 ![Normal operation1](./screenshots/1-1.jpg)
+
 ![Normal operation2](./screenshots/1-2.jpg)
 
 ### А) Shutting down a PostgreSQL follower
@@ -62,6 +63,7 @@ You can see that PostgreSQL IP is only one of the two. Before it was two, but no
 While the application is still working.
 
 ![Follower failure1](./screenshots/2-1.jpg)
+
 ![Follower failure2](./screenshots/2-2.jpg)
 
 ### Б) Shutting down a backend instance
@@ -93,6 +95,7 @@ While PostgreSQL balancing is still in place - logs show different IPs for the P
 The application is still working.
 
 ![Instance failure](./screenshots/3-1.jpg)
+
 ![Instance failure2](./screenshots/3-2.jpg)
 
 ### How to check the logs

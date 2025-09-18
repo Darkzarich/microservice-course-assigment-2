@@ -5,7 +5,7 @@ URL="${1:-http://127.0.0.1:8081/users}"
 
 phase () { echo -e "\n\n======= $* ========\n"; }
 run_load () {
-  ATTEMPTS="${1:-20}" DELAY="${2:-0.3}" ./scripts/load-test.sh "$URL"
+  ATTEMPTS="${1:-20}" DELAY="${2:-0.3}" bash scripts/load-test.sh "$URL"
 }
 
 # --- PHASE 0: baseline (2 backend, 2 replicas)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-REG="k3d-registry.localhost:5000"
+REG="localhost:5000"
 
 declare -A IMAGES=(
   ["backend"]="images/backend"
