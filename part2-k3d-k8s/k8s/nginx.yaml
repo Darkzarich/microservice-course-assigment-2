@@ -16,6 +16,10 @@ data:
           proxy_pass http://backend_up;
           add_header X-Upstream-Addr $upstream_addr always;
         }
+
+        location /health {
+          return 200;
+        }
       }
     }
 ---
@@ -44,6 +48,18 @@ spec:
             - name: cfg
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
       volumes:
         - name: cfg
           configMap:

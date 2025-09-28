@@ -12,34 +12,34 @@ run_load () {
 phase "PHASE 0: baseline (2 backend, 2 replicas)"
 kubectl -n "$NS" scale deploy/backend --replicas=2 >/dev/null
 kubectl -n "$NS" scale deploy/postgres-replicas --replicas=2 >/dev/null
-sleep 3
+sleep 7
 run_load 12 0.3
 
 # --- PHASE A: disable ONE PG replica (scale to 1)
 phase "PHASE A: disable ONE PG replica (scale to 1)"
 kubectl -n "$NS" scale deploy/postgres-replicas --replicas=1
-sleep 3
+sleep 7
 kubectl -n "$NS" get ep postgres-replicas -o wide
 run_load 20 0.3
 
 # --- PHASE A.restore: replicas back to 2
 phase "PHASE A.restore: replicas back to 2"
 kubectl -n "$NS" scale deploy/postgres-replicas --replicas=2
-sleep 3
+sleep 7
 kubectl -n "$NS" get ep postgres-replicas -o wide
 run_load 12 0.3
 
 # --- PHASE B: disable ONE backend (scale to 1)
 phase "PHASE B: disable ONE backend (scale to 1)"
 kubectl -n "$NS" scale deploy/backend --replicas=1
-sleep 3
+sleep 7
 kubectl -n "$NS" get ep backend-headless -o wide
 run_load 20 0.3
 
 # --- PHASE B.restore: backend back to 2
 phase "PHASE B.restore: backend back to 2"
 kubectl -n "$NS" scale deploy/backend --replicas=2
-sleep 3
+sleep 7
 kubectl -n "$NS" get ep backend-headless -o wide
 run_load 12 0.3
 
@@ -48,7 +48,7 @@ phase "PHASE C: 1 backend + 1 PG replica, then delete the ONLY backend pod (obse
 # leave just one instance of each
 kubectl -n "$NS" scale deploy/backend --replicas=1
 kubectl -n "$NS" scale deploy/postgres-replicas --replicas=1
-sleep 3
+sleep 7
 echo "# Endpoints now:"
 kubectl -n "$NS" get ep backend-headless -o wide
 kubectl -n "$NS" get ep postgres-replicas -o wide

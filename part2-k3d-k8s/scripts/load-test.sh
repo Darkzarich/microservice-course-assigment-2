@@ -14,7 +14,7 @@ for ((i=1; i<=ATTEMPTS; i++)); do
   backend_addr="$(printf "%s" "$raw" | awk -F': ' 'BEGIN{IGNORECASE=1}/^X-Upstream-Addr:/{print $2}' | tr -d '\r')"
   [[ -z "${backend_addr}" ]] && backend_addr="unknown"
 
-  haproxy_line="$(kubectl -n "$NS" logs deploy/haproxy --since=1s 2>/dev/null | tail -n 1 || true)"
+  haproxy_line="$(kubectl -n "$NS" logs deploy/haproxy --since=8s 2>/dev/null | tail -n 1 || true)"
   db_node="$(printf "%s" "$haproxy_line" | grep -o 'pg_pool/pg[0-9]\+' | cut -d'/' -f2 || true)"
   [[ -z "${db_node}" ]] && db_node="unknown"
 
